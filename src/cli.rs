@@ -72,7 +72,7 @@ impl Cli {
                     .spawn()?
                     .wait()
             }
-            Commands::Reverse { pkg } => {
+            Commands::ReverseDeps { pkg } => {
                 println!("[vpm] Reverse dependencies for {pkg} (xbps-query -v -R -X {pkg}):");
                 Command::new("xbps-query")
                     .args(&["-v", "-R", "-X"])
