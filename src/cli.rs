@@ -102,7 +102,36 @@ impl Cli {
                     .spawn()?
                     .wait()
             }
-            Commands::DevInstall { pkgs: _ } => todo!(),
+            Commands::DevInstall { pkgs } => {
+                println!("[vpm] Packages will be installed one-by-one. Use `force-install` to override this if you know what you're doing.");
+                println!("(Note: `force-install` won't install -devel packages)");
+
+                let mut exit_status = ExitStatus::default();
+                for pkg in pkgs {
+                    println!("Installing {pkg}, (xbps-install -S {pkg}):");
+                    let exit_status_pkg = Command::new("xbps-install")
+                        .arg("-S")
+                        .arg(&pkg)
+                        .spawn()?
+                        .wait()?;
+                    if exit_status_pkg != ExitStatus::default() {
+                        exit_status = exit_status_pkg;
+                        break;
+                    }
+
+                    println!("Installing devel package for {pkg}, (xbps-install -S {pkg}-devel):");
+                    let exit_status_devel = Command::new("xbps-install")
+                        .arg("-S")
+                        .arg(format!("{pkg}-devel"))
+                        .spawn()?
+                        .wait()?;
+                    if exit_status_devel != ExitStatus::default() {
+                        exit_status = exit_status_devel;
+                        break;
+                    }
+                }
+                Ok(exit_status)
+            }
             Commands::ListAlternatives => todo!(),
             Commands::SetAlternative { pkgs: _ } => todo!(),
             Commands::Reconfigure { pkg: _ } => todo!(),
