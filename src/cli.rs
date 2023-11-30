@@ -56,7 +56,14 @@ impl Cli {
                     .spawn()?
                     .wait()
             }
-            Commands::SearchFile { file: _ } => todo!(),
+            Commands::SearchFile { file } => {
+                println!("Searching for {file}, (xbps-query -v -Rs \"*/{file}\"):");
+                Command::new("xbps-query")
+                    .args(&["-v", "-o"])
+                    .arg(format!("\"*/{file}\""))
+                    .spawn()?
+                    .wait()
+            }
             Commands::List => {
                 println!("[vpm] Installed packages (xbps-query -v -l): ");
                 Command::new("xbps-query")
