@@ -84,7 +84,19 @@ impl Cli {
             Commands::RemoveRecursive { pkgs: _ } => todo!(),
             Commands::Cleanup => todo!(),
             Commands::AutoRemove => todo!(),
-            Commands::WhatProvides { file: _ } => todo!(),
+            Commands::WhatProvides { file } => {
+                println!(
+                    "[vpm]  relaying to: `xlocate foo` - use xlocate -S to (re-)build cached DB."
+                );
+                let child = Command::new("xlocate").arg(file).spawn();
+                if let Err(ref e) = child {
+                    if e.kind() == io::ErrorKind::NotFound {
+                        eprintln!("xlocate not found. Try installing the xtools package.");
+                        std::process::exit(1);
+                    }
+                }
+                child?.wait()
+            }
         }
     }
 }
