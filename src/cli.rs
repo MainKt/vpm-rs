@@ -1,5 +1,6 @@
 use clap::Parser;
 use std::{io, process::ExitStatus};
+use std::process::Command;
 
 mod subcommands;
 
@@ -15,7 +16,10 @@ pub struct Cli {
 impl Cli {
     pub fn execute(self) -> io::Result<ExitStatus> {
         match self.command {
-            Commands::Sync => todo!(),
+            Commands::Sync => {
+                println!("[vpm] Synchronising remote repository data (xbps-install -S):");
+                Command::new("xbps-install").arg("-S").spawn()?.wait()
+            }
             Commands::Update => todo!(),
             Commands::ListRepos => todo!(),
             Commands::AddRepo { repos: _ } => todo!(),
