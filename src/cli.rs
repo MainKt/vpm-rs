@@ -26,10 +26,7 @@ impl Cli {
             }
             Commands::ListRepos => {
                 println!("[vpm] Configured repositories (xbps-query -v -L):");
-                Command::new("xbps-query")
-                    .arg("-vL")
-                    .spawn()?
-                    .wait()?;
+                Command::new("xbps-query").arg("-vL").spawn()?.wait()?;
 
                 println!("[vpm] Available sub-repositories (xbps-query -v -Rs void-repo):");
                 Command::new("xbps-query")
@@ -47,7 +44,15 @@ impl Cli {
             Commands::Search { term: _ } => todo!(),
             Commands::SearchFile { file: _ } => todo!(),
             Commands::List => todo!(),
-            Commands::Install { pkgs: _ } => todo!(),
+            Commands::Install { pkgs } => {
+                let pkg_names = pkgs.join(" ");
+                println!("[vpm] Installing packages [{pkg_names}]: (xbps-install -S {pkg_names})");
+                Command::new("xbps-install")
+                    .arg("-S")
+                    .args(pkgs)
+                    .spawn()?
+                    .wait()
+            }
             Commands::DevInstall { pkgs: _ } => todo!(),
             Commands::ListAlternatives => todo!(),
             Commands::SetAlternative { pkgs: _ } => todo!(),
