@@ -149,7 +149,14 @@ impl Cli {
                     .spawn()?
                     .wait()
             }
-            Commands::Reconfigure { pkg: _ } => todo!(),
+            Commands::Reconfigure { pkg } => {
+                println!("[vpm] Re-configuring {pkg}, (xbps-reconfigure -v {pkg})");
+                Command::new("xbps-reconfigure")
+                    .arg("-v")
+                    .arg(pkg)
+                    .spawn()?
+                    .wait()
+            }
             Commands::ForceInstall { pkgs: _ } => todo!(),
             Commands::Remove { pkgs } => {
                 let pkg_names = pkgs.join(" ");
