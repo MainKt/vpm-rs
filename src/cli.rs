@@ -83,7 +83,13 @@ impl Cli {
             }
             Commands::RemoveRecursive { pkgs: _ } => todo!(),
             Commands::Cleanup => todo!(),
-            Commands::AutoRemove => todo!(),
+            Commands::AutoRemove => {
+                println!("[vpm] Removing orphaned packages (xbps-install -v -o):");
+                Command::new("xbps-remove")
+                    .args(&["-v", "-o"])
+                    .spawn()?
+                    .wait()
+            }
             Commands::WhatProvides { file } => {
                 println!(
                     "[vpm]  relaying to: `xlocate foo` - use xlocate -S to (re-)build cached DB."
