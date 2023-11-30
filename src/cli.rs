@@ -1,4 +1,5 @@
 use clap::Parser;
+use std::{io, process::ExitStatus};
 
 mod subcommands;
 
@@ -12,7 +13,7 @@ pub struct Cli {
 }
 
 impl Cli {
-    pub fn execute(self) {
+    pub fn execute(self) -> io::Result<ExitStatus> {
         match self.command {
             Commands::Sync => todo!(),
             Commands::Update => todo!(),
