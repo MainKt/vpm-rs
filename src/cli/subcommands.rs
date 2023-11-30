@@ -24,7 +24,7 @@ pub enum Commands {
     /// Show dependencies for <package>
     Deps { pkg: String },
 
-    /// Show reverse dependendies of <package> (see man xbps-query)
+    /// Show reverse dependencies of <package> (see man xbps-query)
     Reverse { pkg: String },
 
     /// Search for package by <name>

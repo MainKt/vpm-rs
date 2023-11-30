@@ -9,14 +9,16 @@ You'll need to grab a
 $ git clone https://github.com/MainKt/vpm-rs
 $ cd vpm-rs
 $ cargo build --release
-$ ./target/release/vpm-rs --version
-vpm-rs 0.1.0
+$ ./target/release/vpm --version
+vpm 0.1.0
 ```
 
 ### Usage
 ```
-$ vpm-rs
-Usage: vpm-rs <COMMAND>
+$ vpm
+vpm-rs - An XBPS package management helper
+
+Usage: vpm <COMMAND>
 
 Commands:
   sync               Synchronize remote repository data
