@@ -58,7 +58,15 @@ impl Cli {
             Commands::SetAlternative { pkgs: _ } => todo!(),
             Commands::Reconfigure { pkg: _ } => todo!(),
             Commands::ForceInstall { pkgs: _ } => todo!(),
-            Commands::Remove { pkgs: _ } => todo!(),
+            Commands::Remove { pkgs } => {
+                let pkg_names = pkgs.join(" ");
+                println!("[vpm] Removing packages [{pkg_names}]: (xbps-remove -v {pkg_names})");
+                Command::new("xbps-remove")
+                    .arg("-v")
+                    .args(pkgs)
+                    .spawn()?
+                    .wait()
+            }
             Commands::RemoveRecursive { pkgs: _ } => todo!(),
             Commands::Cleanup => todo!(),
             Commands::AutoRemove => todo!(),
