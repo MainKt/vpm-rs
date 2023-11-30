@@ -132,7 +132,14 @@ impl Cli {
                 }
                 Ok(exit_status)
             }
-            Commands::ListAlternatives => todo!(),
+            Commands::ListAlternatives { pkg } => {
+                println!("[vpm] Alternatives for {pkg}, (xbps-alternatives -l {pkg}):");
+                Command::new("xbps-alternatives")
+                    .arg("-l")
+                    .arg(pkg)
+                    .spawn()?
+                    .wait()
+            }
             Commands::SetAlternative { pkgs: _ } => todo!(),
             Commands::Reconfigure { pkg: _ } => todo!(),
             Commands::ForceInstall { pkgs: _ } => todo!(),

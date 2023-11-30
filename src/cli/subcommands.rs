@@ -43,7 +43,7 @@ pub enum Commands {
     DevInstall { pkgs: Vec<String> },
 
     /// List alternative candidates
-    ListAlternatives,
+    ListAlternatives { pkg: String },
 
     /// Set alternative for <package>
     SetAlternative { pkgs: Vec<String> },
