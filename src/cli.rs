@@ -82,7 +82,14 @@ impl Cli {
                     .wait()
             }
             Commands::RemoveRecursive { pkgs: _ } => todo!(),
-            Commands::Cleanup => todo!(),
+            Commands::Cleanup => {
+                println!("[vpm] Cleaning up packages (will remove orphaned packages) (xbps-remove -v -O clean)");
+                Command::new("xbps-remove")
+                    .args(&["-v", "-O"])
+                    .arg("clean")
+                    .spawn()?
+                    .wait()
+            }
             Commands::AutoRemove => {
                 println!("[vpm] Removing orphaned packages (xbps-install -v -o):");
                 Command::new("xbps-remove")
