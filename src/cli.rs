@@ -1,6 +1,6 @@
 use clap::Parser;
-use std::{io, process::ExitStatus};
 use std::process::Command;
+use std::{io, process::ExitStatus};
 
 mod subcommands;
 
@@ -20,7 +20,10 @@ impl Cli {
                 println!("[vpm] Synchronising remote repository data (xbps-install -S):");
                 Command::new("xbps-install").arg("-S").spawn()?.wait()
             }
-            Commands::Update => todo!(),
+            Commands::Update => {
+                println!("[vpm] Running system update (xbps-install -Suv):");
+                Command::new("xbps-install").arg("-Suv").spawn()?.wait()
+            }
             Commands::ListRepos => todo!(),
             Commands::AddRepo { repos: _ } => todo!(),
             Commands::Info { pkg: _ } => todo!(),
