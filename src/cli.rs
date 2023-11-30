@@ -37,7 +37,14 @@ impl Cli {
                     .wait()
             }
             Commands::AddRepo { repos: _ } => todo!(),
-            Commands::Info { pkg: _ } => todo!(),
+            Commands::Info { pkg } => {
+                println!("[vpm] Info on {pkg} (xbps-query -v -R {pkg}):");
+                Command::new("xbps-query")
+                    .args(&["-v", "-R"])
+                    .arg(pkg)
+                    .spawn()?
+                    .wait()
+            }
             Commands::FileList { pkg: _ } => todo!(),
             Commands::Deps { pkg: _ } => todo!(),
             Commands::Reverse { pkg: _ } => todo!(),
