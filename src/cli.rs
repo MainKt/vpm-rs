@@ -61,7 +61,14 @@ impl Cli {
                     .spawn()?
                     .wait()
             }
-            Commands::Reverse { pkg: _ } => todo!(),
+            Commands::Reverse { pkg } => {
+                println!("[vpm] Reverse dependencies for {pkg}, (xbps-query -v -R -X {pkg}):");
+                Command::new("xbps-query")
+                    .args(&["-v", "-R", "-X"])
+                    .arg(pkg)
+                    .spawn()?
+                    .wait()
+            }
             Commands::Search { term } => {
                 println!("Searching for {term}, (xbps-query -v -Rs {term}):");
                 Command::new("xbps-query")
