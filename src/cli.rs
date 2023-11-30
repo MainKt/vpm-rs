@@ -74,16 +74,24 @@ impl Cli {
             Commands::ForceInstall { pkgs: _ } => todo!(),
             Commands::Remove { pkgs } => {
                 let pkg_names = pkgs.join(" ");
-                println!("[vpm] Removing packages [{pkg_names}]: (xbps-remove -v {pkg_names})");
+                println!("[vpm] Removing packages [{pkg_names}], (xbps-remove -v {pkg_names}):");
                 Command::new("xbps-remove")
                     .arg("-v")
                     .args(pkgs)
                     .spawn()?
                     .wait()
             }
-            Commands::RemoveRecursive { pkgs: _ } => todo!(),
+            Commands::RemoveRecursive { pkgs } => {
+                let pkg_names = pkgs.join(" ");
+                println!("[vpm] Removing package(s) recursively [{pkg_names}], (xbps-remove -v -R {pkg_names}):");
+                Command::new("xbps-remove")
+                    .args(&["-v", "-R"])
+                    .args(pkgs)
+                    .spawn()?
+                    .wait()
+            }
             Commands::Cleanup => {
-                println!("[vpm] Cleaning up packages (will remove orphaned packages) (xbps-remove -v -O clean)");
+                println!("[vpm] Cleaning up packages (will remove orphaned packages) (xbps-remove -v -O clean):");
                 Command::new("xbps-remove")
                     .args(&["-v", "-O"])
                     .arg("clean")
