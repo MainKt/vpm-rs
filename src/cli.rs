@@ -140,7 +140,15 @@ impl Cli {
                     .spawn()?
                     .wait()
             }
-            Commands::SetAlternative { pkgs: _ } => todo!(),
+            Commands::SetAlternative { pkgs } => {
+                let pkg_names = pkgs.join(" ");
+                println!("[vpm] Setting alternative for {pkg_names}, (xbps-alternatives -s {pkg_names}):");
+                Command::new("xbps-alternatives")
+                    .arg("-s")
+                    .args(pkgs)
+                    .spawn()?
+                    .wait()
+            }
             Commands::Reconfigure { pkg: _ } => todo!(),
             Commands::ForceInstall { pkgs: _ } => todo!(),
             Commands::Remove { pkgs } => {
