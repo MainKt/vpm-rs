@@ -26,24 +26,26 @@ impl Cli {
             }
             Commands::ListRepos => {
                 println!("[vpm] Configured repositories (xbps-query -v -L):");
-                Command::new("xbps-query").arg("-vL").spawn()?.wait()?;
+                Command::new("xbps-query")
+                    .args(&["-v", "-L"])
+                    .spawn()?
+                    .wait()?;
 
                 println!("[vpm] Available sub-repositories (xbps-query -v -Rs void-repo):");
                 Command::new("xbps-query")
-                    .arg("-v")
-                    .arg("-Rs")
+                    .args(&["-v", "-Rs"])
                     .arg("void-repo")
                     .spawn()?
                     .wait()
             }
             Commands::AddRepo { repo } => {
-                println!("[vpm] Adding repository, {repo} (xbps-install {repo})");
+                println!("[vpm] Adding repository {repo} (xbps-install {repo}):");
                 let exit_status = Command::new("xbps-install").arg(repo).spawn()?.wait()?;
                 if exit_status != ExitStatus::default() {
                     return Ok(exit_status);
                 }
 
-                println!("[vpm] Synchronizing remote repository data (xbps-install -S): ");
+                println!("[vpm] Synchronizing remote repository data (xbps-install -S):");
                 Command::new("xbps-install").arg("-S").spawn()?.wait()
             }
             Commands::Info { pkg } => {
@@ -71,7 +73,7 @@ impl Cli {
                     .wait()
             }
             Commands::Reverse { pkg } => {
-                println!("[vpm] Reverse dependencies for {pkg}, (xbps-query -v -R -X {pkg}):");
+                println!("[vpm] Reverse dependencies for {pkg} (xbps-query -v -R -X {pkg}):");
                 Command::new("xbps-query")
                     .args(&["-v", "-R", "-X"])
                     .arg(pkg)
@@ -79,7 +81,7 @@ impl Cli {
                     .wait()
             }
             Commands::Search { term } => {
-                println!("Searching for {term}, (xbps-query -v -Rs {term}):");
+                println!("Searching for {term} (xbps-query -v -Rs {term}):");
                 Command::new("xbps-query")
                     .args(&["-v", "-Rs"])
                     .arg(term)
@@ -87,7 +89,7 @@ impl Cli {
                     .wait()
             }
             Commands::SearchFile { file } => {
-                println!("Searching for {file}, (xbps-query -v -Rs \"*/{file}\"):");
+                println!("Searching for {file} (xbps-query -v -o \"*/{file}\"):");
                 Command::new("xbps-query")
                     .args(&["-v", "-o"])
                     .arg(format!("\"*/{file}\""))
@@ -95,16 +97,15 @@ impl Cli {
                     .wait()
             }
             Commands::List => {
-                println!("[vpm] Installed packages (xbps-query -v -l): ");
+                println!("[vpm] Installed packages (xbps-query -v -l):");
                 Command::new("xbps-query")
-                    .arg("-v")
-                    .arg("-l")
+                    .args(&["-v", "-l"])
                     .spawn()?
                     .wait()
             }
             Commands::Install { pkgs } => {
                 let pkg_names = pkgs.join(" ");
-                println!("[vpm] Installing packages [{pkg_names}]: (xbps-install -S {pkg_names})");
+                println!("[vpm] Installing packages [{pkg_names}] (xbps-install -S {pkg_names}):");
                 Command::new("xbps-install")
                     .arg("-S")
                     .args(pkgs)
@@ -117,7 +118,7 @@ impl Cli {
 
                 let mut exit_status = ExitStatus::default();
                 for pkg in pkgs {
-                    println!("Installing {pkg}, (xbps-install -S {pkg}):");
+                    println!("Installing {pkg} (xbps-install -S {pkg}):");
                     let exit_status_pkg = Command::new("xbps-install")
                         .arg("-S")
                         .arg(&pkg)
@@ -128,7 +129,7 @@ impl Cli {
                         break;
                     }
 
-                    println!("Installing devel package for {pkg}, (xbps-install -S {pkg}-devel):");
+                    println!("Installing devel package for {pkg} (xbps-install -S {pkg}-devel):");
                     let exit_status_devel = Command::new("xbps-install")
                         .arg("-S")
                         .arg(format!("{pkg}-devel"))
@@ -142,7 +143,7 @@ impl Cli {
                 Ok(exit_status)
             }
             Commands::ListAlternatives { pkg } => {
-                println!("[vpm] Alternatives for {pkg}, (xbps-alternatives -l {pkg}):");
+                println!("[vpm] Alternatives for {pkg} (xbps-alternatives -l {pkg}):");
                 Command::new("xbps-alternatives")
                     .arg("-l")
                     .arg(pkg)
@@ -151,7 +152,9 @@ impl Cli {
             }
             Commands::SetAlternative { pkgs } => {
                 let pkg_names = pkgs.join(" ");
-                println!("[vpm] Setting alternative for {pkg_names}, (xbps-alternatives -s {pkg_names}):");
+                println!(
+                    "[vpm] Setting alternative for {pkg_names} (xbps-alternatives -s {pkg_names}):"
+                );
                 Command::new("xbps-alternatives")
                     .arg("-s")
                     .args(pkgs)
@@ -159,7 +162,7 @@ impl Cli {
                     .wait()
             }
             Commands::Reconfigure { pkg } => {
-                println!("[vpm] Re-configuring {pkg}, (xbps-reconfigure -v {pkg})");
+                println!("[vpm] Re-configuring {pkg} (xbps-reconfigure -v {pkg}):");
                 Command::new("xbps-reconfigure")
                     .arg("-v")
                     .arg(pkg)
@@ -168,7 +171,7 @@ impl Cli {
             }
             Commands::ForceInstall { pkgs } => {
                 let pkg_names = pkgs.join(" ");
-                println!("[vpm] Force-Installing [{pkg_names}], (xbps-install -Sf {pkg_names})");
+                println!("[vpm] Force-Installing [{pkg_names}] (xbps-install -Sf {pkg_names}):");
                 Command::new("xbps-install")
                     .arg("-Sf")
                     .args(pkgs)
@@ -177,7 +180,7 @@ impl Cli {
             }
             Commands::Remove { pkgs } => {
                 let pkg_names = pkgs.join(" ");
-                println!("[vpm] Removing packages [{pkg_names}], (xbps-remove -v {pkg_names}):");
+                println!("[vpm] Removing packages [{pkg_names}] (xbps-remove -v {pkg_names}):");
                 Command::new("xbps-remove")
                     .arg("-v")
                     .args(pkgs)
@@ -186,7 +189,7 @@ impl Cli {
             }
             Commands::RemoveRecursive { pkgs } => {
                 let pkg_names = pkgs.join(" ");
-                println!("[vpm] Removing package(s) recursively [{pkg_names}], (xbps-remove -v -R {pkg_names}):");
+                println!("[vpm] Removing package(s) recursively [{pkg_names}] (xbps-remove -v -R {pkg_names}):");
                 Command::new("xbps-remove")
                     .args(&["-v", "-R"])
                     .args(pkgs)
@@ -202,7 +205,7 @@ impl Cli {
                     .wait()
             }
             Commands::AutoRemove => {
-                println!("[vpm] Removing orphaned packages (xbps-install -v -o):");
+                println!("[vpm] Removing orphaned packages (xbps-remove -v -o):");
                 Command::new("xbps-remove")
                     .args(&["-v", "-o"])
                     .spawn()?
@@ -210,7 +213,8 @@ impl Cli {
             }
             Commands::WhatProvides { file } => {
                 println!(
-                    "[vpm]  relaying to: `xlocate foo` - use xlocate -S to (re-)build cached DB."
+                    "[vpm] relaying to: `xlocate {}` - use xlocate -S to (re-)build cached DB.",
+                    file.to_string_lossy()
                 );
                 let child = Command::new("xlocate").arg(file).spawn();
                 if let Err(ref e) = child {
