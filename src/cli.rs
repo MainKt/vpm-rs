@@ -24,7 +24,21 @@ impl Cli {
                 println!("[vpm] Running system update (xbps-install -Suv):");
                 Command::new("xbps-install").arg("-Suv").spawn()?.wait()
             }
-            Commands::ListRepos => todo!(),
+            Commands::ListRepos => {
+                println!("[vpm] Configured repositories (xbps-query -v -L):");
+                Command::new("xbps-query")
+                    .arg("-vL")
+                    .spawn()?
+                    .wait()?;
+
+                println!("[vpm] Available sub-repositories (xbps-query -v -Rs void-repo):");
+                Command::new("xbps-query")
+                    .arg("-v")
+                    .arg("-Rs")
+                    .arg("void-repo")
+                    .spawn()?
+                    .wait()
+            }
             Commands::AddRepo { repos: _ } => todo!(),
             Commands::Info { pkg: _ } => todo!(),
             Commands::FileList { pkg: _ } => todo!(),
