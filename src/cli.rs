@@ -36,7 +36,16 @@ impl Cli {
                     .spawn()?
                     .wait()
             }
-            Commands::AddRepo { repos: _ } => todo!(),
+            Commands::AddRepo { repo } => {
+                println!("[vpm] Adding repository, {repo} (xbps-install {repo})");
+                let exit_status = Command::new("xbps-install").arg(repo).spawn()?.wait()?;
+                if exit_status != ExitStatus::default() {
+                    return Ok(exit_status);
+                }
+
+                println!("[vpm] Synchronizing remote repository data (xbps-install -S): ");
+                Command::new("xbps-install").arg("-S").spawn()?.wait()
+            }
             Commands::Info { pkg } => {
                 println!("[vpm] Info on {pkg} (xbps-query -v -R {pkg}):");
                 Command::new("xbps-query")

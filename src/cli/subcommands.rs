@@ -13,7 +13,7 @@ pub enum Commands {
     ListRepos,
 
     /// Add an additional repository
-    AddRepo { repos: Vec<String> },
+    AddRepo { repo: String },
 
     /// Show information about <package>
     Info { pkg: String },
