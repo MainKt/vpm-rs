@@ -157,7 +157,15 @@ impl Cli {
                     .spawn()?
                     .wait()
             }
-            Commands::ForceInstall { pkgs: _ } => todo!(),
+            Commands::ForceInstall { pkgs } => {
+                let pkg_names = pkgs.join(" ");
+                println!("[vpm] Force-Installing [{pkg_names}], (xbps-install -Sf {pkg_names})");
+                Command::new("xbps-install")
+                    .arg("-Sf")
+                    .args(pkgs)
+                    .spawn()?
+                    .wait()
+            }
             Commands::Remove { pkgs } => {
                 let pkg_names = pkgs.join(" ");
                 println!("[vpm] Removing packages [{pkg_names}], (xbps-remove -v {pkg_names}):");
