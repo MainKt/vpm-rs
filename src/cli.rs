@@ -45,7 +45,14 @@ impl Cli {
                     .spawn()?
                     .wait()
             }
-            Commands::FileList { pkg: _ } => todo!(),
+            Commands::FileList { pkg } => {
+                println!("[vpm] file-list of {pkg} (xbps-query -v -R -f {pkg}):");
+                Command::new("xbps-query")
+                    .args(&["-v", "-R", "-f"])
+                    .arg(pkg)
+                    .spawn()?
+                    .wait()
+            }
             Commands::Deps { pkg: _ } => todo!(),
             Commands::Reverse { pkg: _ } => todo!(),
             Commands::Search { term } => {
