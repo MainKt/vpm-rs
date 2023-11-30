@@ -48,7 +48,14 @@ impl Cli {
             Commands::FileList { pkg: _ } => todo!(),
             Commands::Deps { pkg: _ } => todo!(),
             Commands::Reverse { pkg: _ } => todo!(),
-            Commands::Search { term: _ } => todo!(),
+            Commands::Search { term } => {
+                println!("Searching for {term}, (xbps-query -v -Rs {term}):");
+                Command::new("xbps-query")
+                    .args(&["-v", "-Rs"])
+                    .arg(term)
+                    .spawn()?
+                    .wait()
+            }
             Commands::SearchFile { file: _ } => todo!(),
             Commands::List => {
                 println!("[vpm] Installed packages (xbps-query -v -l): ");
