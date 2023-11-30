@@ -43,7 +43,14 @@ impl Cli {
             Commands::Reverse { pkg: _ } => todo!(),
             Commands::Search { term: _ } => todo!(),
             Commands::SearchFile { file: _ } => todo!(),
-            Commands::List => todo!(),
+            Commands::List => {
+                println!("[vpm] Installed packages (xbps-query -v -l): ");
+                Command::new("xbps-query")
+                    .arg("-v")
+                    .arg("-l")
+                    .spawn()?
+                    .wait()
+            }
             Commands::Install { pkgs } => {
                 let pkg_names = pkgs.join(" ");
                 println!("[vpm] Installing packages [{pkg_names}]: (xbps-install -S {pkg_names})");
